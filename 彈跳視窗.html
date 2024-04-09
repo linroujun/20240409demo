@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用SweetAlert上传图片</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css">
+</head>
+<body>
+
+<button id="uploadButton">上传图片</button>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
+
+<script>
+    document.getElementById('uploadButton').addEventListener('click', function () {
+        Swal.fire({
+            title: '上传图片',
+            html: '<div id="dropzone" class="dropzone"></div>',
+            showCancelButton: true,
+            showConfirmButton: false,
+            cancelButtonText: '取消',
+            didOpen: function () {
+                // 初始化 Dropzone
+                Dropzone.autoDiscover = false;
+                var myDropzone = new Dropzone("#dropzone", {
+                    url: "/upload", // 替换成你的上传 URL
+                    maxFiles: 1,
+                    acceptedFiles: 'image/*',
+                    dictDefaultMessage: '拖拽图片至此或点击上传',
+                    init: function () {
+                        this.on('success', function (file, response) {
+                            Swal.fire('成功!', '图片上传成功!', 'success');
+                        });
+                        this.on('error', function (file, errorMessage, xhr) {
+                            // 提取错误消息
+                            var message;
+                            if (xhr) {
+                                message = xhr.response;
+                            } else {
+                                message = errorMessage;
+                            }
+                            Swal.fire('错误!', message, 'error');
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
